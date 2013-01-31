@@ -25,13 +25,12 @@ NSString * const GCUploaderFinished = @"GCUploaderFinished";
     if(![[GCAccount sharedManager] assetsLibrary]){
         ALAssetsLibrary *temp = [[ALAssetsLibrary alloc] init];
         [[GCAccount sharedManager] setAssetsLibrary:temp];
-        [temp release];
     }
     ALAssetsLibrary *library = [[GCAccount sharedManager] assetsLibrary];
     [library writeImageToSavedPhotosAlbum:[image CGImage] metadata:[NSDictionary dictionary] completionBlock:^(NSURL *assetURL, NSError *error){
         if(!error){
             [library assetForURL:assetURL resultBlock:^(ALAsset *asset){
-                GCAsset *temp = [[[GCAsset alloc] init] autorelease];
+                GCAsset *temp = [[GCAsset alloc] init];
                 [temp setAlAsset:asset];
                 GCParcel *parcel = [GCParcel objectWithAssets:[NSArray arrayWithObject:temp] andChutes:[NSArray arrayWithObject:chute]];
                 [[GCUploader sharedUploader] addParcel:parcel];
@@ -48,13 +47,12 @@ NSString * const GCUploaderFinished = @"GCUploaderFinished";
         if(![[GCAccount sharedManager] assetsLibrary]){
             ALAssetsLibrary *temp = [[ALAssetsLibrary alloc] init];
             [[GCAccount sharedManager] setAssetsLibrary:temp];
-            [temp release];
         }
         ALAssetsLibrary *library = [[GCAccount sharedManager] assetsLibrary];
         [library writeImageToSavedPhotosAlbum:[image CGImage] metadata:[NSDictionary dictionary] completionBlock:^(NSURL *assetURL, NSError *error){
             if(!error){
                 [library assetForURL:assetURL resultBlock:^(ALAsset *asset){
-                    GCAsset *temp = [[[GCAsset alloc] init] autorelease];
+                    GCAsset *temp = [[GCAsset alloc] init];
                     [temp setAlAsset:asset];
                     [array addObject:temp];
                     if([array count] == [images count]){
@@ -152,7 +150,7 @@ NSString * const GCUploaderFinished = @"GCUploaderFinished";
     [self setQueue:[NSMutableArray array]];
     for(NSDictionary *dictionary in array){
         GCParcel *parcel = [[GCParcel alloc] initWithDictionaryRepresentation:dictionary];
-        [self.queue addObject:[parcel autorelease]];
+        [self.queue addObject:parcel];
     }
     [self processQueue];
 }
@@ -183,7 +181,7 @@ NSString * const GCUploaderFinished = @"GCUploaderFinished";
 
 + (id)allocWithZone:(NSZone *)zone
 {
-    return [[self sharedUploader] retain];
+    return [self sharedUploader];
 }
 
 - (id) init {
@@ -201,29 +199,5 @@ NSString * const GCUploaderFinished = @"GCUploaderFinished";
     return self;
 }
 
-- (id)retain
-{
-    return self;
-}
-
-- (NSUInteger)retainCount
-{
-    return NSUIntegerMax;
-}
-
-- (oneway void)release;
-{
-    //nothing
-}
-
-- (id)autorelease
-{
-    return self;
-}
-
-- (void) dealloc {
-    [_queue release];
-    [super dealloc];
-}
 
 @end

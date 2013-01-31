@@ -12,9 +12,9 @@
     IBOutlet UIButton *loginButton;
 }
 
-@property (nonatomic, retain) IBOutlet UIView *authView;
-@property (nonatomic, retain) IBOutlet UIWebView *authWebView;
-@property (nonatomic, retain) IBOutlet UIView *blankBackground;
+@property (nonatomic, strong) IBOutlet UIView *authView;
+@property (nonatomic, strong) IBOutlet UIWebView *authWebView;
+@property (nonatomic, strong) IBOutlet UIView *blankBackground;
 
 -(IBAction) login;
 -(void) loginWithService:(NSString*)service;

@@ -11,7 +11,7 @@
 
 @interface ViewController : UIViewController <PhotoPickerPlusDelegate>
 
-@property (nonatomic, readonly) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic, readonly) IBOutlet UIImageView *imageView;
 
 -(IBAction)pickPhotoSelected:(id)sender;
 

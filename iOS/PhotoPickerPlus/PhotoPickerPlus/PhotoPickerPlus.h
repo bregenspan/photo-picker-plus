@@ -56,7 +56,7 @@ typedef NSUInteger PhotoPickerPlusSourceType;
 @interface PhotoPickerPlus : GCUIBaseViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate>
 
 //The delegate used for returning image info
-@property (nonatomic, assign) NSObject <PhotoPickerPlusDelegate> *delegate;
+@property (nonatomic, weak) NSObject <PhotoPickerPlusDelegate> *delegate;
 
 @property (nonatomic) BOOL appeared;
 
@@ -72,13 +72,13 @@ typedef NSUInteger PhotoPickerPlusSourceType;
 
 @interface AccountViewController : GCUIBaseViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITableViewDataSource, UITableViewDelegate>
 
-@property (nonatomic, assign) NSObject <PhotoPickerPlusDelegate> *delegate;
-@property (nonatomic, assign) PhotoPickerPlus *P3;
+@property (nonatomic, weak) NSObject <PhotoPickerPlusDelegate> *delegate;
+@property (nonatomic, weak) PhotoPickerPlus *P3;
 
-@property (nonatomic, retain) NSArray *photoAlbums;
-@property (nonatomic, retain) NSArray *accounts;
+@property (nonatomic, strong) NSArray *photoAlbums;
+@property (nonatomic, strong) NSArray *accounts;
 
-@property (nonatomic, retain) UITableView *accountsTable;
+@property (nonatomic, strong) UITableView *accountsTable;
 
 @property (nonatomic) int accountIndex;
 
@@ -91,24 +91,24 @@ typedef NSUInteger PhotoPickerPlusSourceType;
 
 @interface AccountLoginViewController : GCUIBaseViewController <UIWebViewDelegate>
 
-@property (nonatomic, retain) UIWebView *AddServiceWebView;
-@property (nonatomic, retain) NSString *service;
+@property (nonatomic, strong) UIWebView *AddServiceWebView;
+@property (nonatomic, strong) NSString *service;
 
 @end
 
 @interface AlbumViewController : GCUIBaseViewController <UITableViewDataSource, UITableViewDelegate>
 
-@property (nonatomic, assign) NSObject <PhotoPickerPlusDelegate> *delegate;
-@property (nonatomic, assign) PhotoPickerPlus *P3;
+@property (nonatomic, weak) NSObject <PhotoPickerPlusDelegate> *delegate;
+@property (nonatomic, weak) PhotoPickerPlus *P3;
 
-@property (nonatomic, retain) NSArray *albums;
+@property (nonatomic, strong) NSArray *albums;
 
-@property (nonatomic, retain) UITableView *albumsTable;
+@property (nonatomic, strong) UITableView *albumsTable;
 
 @property (nonatomic) BOOL multipleImageSelectionEnabled;
 @property (nonatomic) BOOL useStandardDevicePicker;
 
-@property (nonatomic, assign) NSDictionary *account;
+@property (nonatomic, weak) NSDictionary *account;
 
 -(UIView*)tableView:(UITableView *)tableView viewForIndexPath:(NSIndexPath*)indexPath;
 
@@ -116,22 +116,22 @@ typedef NSUInteger PhotoPickerPlusSourceType;
 
 @interface PhotoViewController : GCUIBaseViewController <UITableViewDataSource, UITableViewDelegate>
 
-@property (nonatomic, assign) NSObject <PhotoPickerPlusDelegate> *delegate;
-@property (nonatomic, assign) PhotoPickerPlus *P3;
+@property (nonatomic, weak) NSObject <PhotoPickerPlusDelegate> *delegate;
+@property (nonatomic, weak) PhotoPickerPlus *P3;
 
-@property (nonatomic, retain) NSArray *photos;
-@property (nonatomic, retain) NSMutableOrderedSet *selectedAssets;
+@property (nonatomic, strong) NSArray *photos;
+@property (nonatomic, strong) NSMutableOrderedSet *selectedAssets;
 
-@property (nonatomic, retain) UITableView *photosTable;
+@property (nonatomic, strong) UITableView *photosTable;
 
-@property (nonatomic, retain) UIView *photoCountView;
-@property (nonatomic, retain) UILabel *photoCountLabel;
+@property (nonatomic, strong) UIView *photoCountView;
+@property (nonatomic, strong) UILabel *photoCountLabel;
 
 @property (nonatomic) BOOL multipleImageSelectionEnabled;
 @property (nonatomic) BOOL useStandardDevicePicker;
-@property (nonatomic, assign) NSDictionary *account;
-@property (nonatomic, assign) NSDictionary *album;
-@property (nonatomic, assign) ALAssetsGroup *group;
+@property (nonatomic, weak) NSDictionary *account;
+@property (nonatomic, weak) NSDictionary *album;
+@property (nonatomic, weak) ALAssetsGroup *group;
 
 -(UIView*)tableView:(UITableView *)tableView viewForIndexPath:(NSIndexPath*)indexPath;
 

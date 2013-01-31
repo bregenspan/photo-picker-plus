@@ -23,7 +23,7 @@
             [vc setMessageBody:message isHTML:YES];
         if(subject)
             [vc setSubject:subject];
-        return [vc autorelease];
+        return vc;
     }
     return NULL;
 }
@@ -59,7 +59,7 @@
 +(EKEvent*)eventNamed:(NSString*)eventName afterEventStartDate:(NSDate*)start beforeEventEndDate:(NSDate*)end{
     if(!eventName)
         return NULL;
-    EKEventStore *store = [[[EKEventStore alloc] init] autorelease];
+    EKEventStore *store = [[EKEventStore alloc] init];
     if(!start){
         CFGregorianDate gregorianStartDate;
         CFGregorianUnits startUnits = {0, 0, -30, 0, 0, 0};

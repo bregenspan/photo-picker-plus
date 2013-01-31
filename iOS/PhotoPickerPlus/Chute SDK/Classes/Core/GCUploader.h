@@ -16,7 +16,7 @@ NSString * const GCUploaderFinished;
 
 @interface GCUploader : NSObject
 
-@property (nonatomic, retain) NSMutableArray *queue;
+@property (nonatomic, strong) NSMutableArray *queue;
 
 @property (nonatomic, assign) CGFloat progress;
 

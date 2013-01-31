@@ -17,7 +17,7 @@
 
 @interface GCEventEmailComponent : NSObject <MFMailComposeViewControllerDelegate>
 
-@property (nonatomic, assign) id delegate;
+@property (nonatomic, weak) id delegate;
 
 //message and subject are optional, if dates are not supplied it will set start to 30 days ago and end to 30 days from now.
 +(MFMailComposeViewController*)MailViewControllerForEventNamed:(NSString*)event afterEventStartDate:(NSDate*)start beforeEventEndDate:(NSDate*)end withMessage:(NSString*)message andSubject:(NSString*)subject;

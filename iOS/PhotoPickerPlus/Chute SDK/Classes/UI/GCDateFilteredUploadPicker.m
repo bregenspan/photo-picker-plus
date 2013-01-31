@@ -60,7 +60,6 @@
 
 -(void)setImages:(NSArray *)_images{
     if(images){
-        [images release];
         images = NULL;
     }
     images = [[NSArray alloc] initWithArray:[self sortArraybyDate:_images]];
@@ -96,7 +95,6 @@
         [v setBackgroundColor:[UIColor whiteColor]];
         [v setFrame:CGRectMake(view.frame.size.width-20, view.frame.size.height-20, 20, 20)];
         [view addSubview:v];
-        [v release];
         [selected addObject:asset];
     }
     else{
@@ -123,13 +121,12 @@
         [selectedSlider setContentSize: CGSizeMake((selectedSlider.frame.size.height-5)*[selected count]+5, selectedSlider.frame.size.height)];
         CGRect rect = CGRectMake(5, 5, selectedSlider.frame.size.height-10, selectedSlider.frame.size.height-6);
         for(GCAsset *asset in selected){
-            UIImageView *iv = [[[UIImageView alloc] initWithFrame:rect] autorelease];
+            UIImageView *iv = [[UIImageView alloc] initWithFrame:rect];
             [iv setImage:[asset thumbnail]];
             [iv setTag:[[self filteredImages] indexOfObject:asset]];
             [iv setUserInteractionEnabled:YES];
             UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(objectTappedWithGesture:)];
             [iv addGestureRecognizer:tap];
-            [tap release];
             [selectedSlider addSubview:iv];
             rect = CGRectMake(rect.origin.x+rect.size.width+5, rect.origin.y, rect.size.width, rect.size.height);
         }
@@ -137,7 +134,6 @@
 }
 
 -(void)resetView{
-    [selected release];
     selected = [[NSMutableSet alloc] init];
     if(filteredImages && filteredImages.count > 0)
         [imageTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
@@ -189,7 +185,6 @@
             GCAsset *asset = [[GCAsset alloc] init];
             [asset setAlAsset:result];
             [set addObject:asset];
-            [asset release];
         }
     };
     
@@ -209,7 +204,6 @@
                            usingBlock:assetGroupEnumerator
                          failureBlock: ^(NSError *error) {
                          }];
-    [library release];
 }
 
 #pragma mark - View lifecycle
@@ -234,7 +228,6 @@
         [temp setImage:image];
         [temp setBackgroundColor:[UIColor whiteColor]];
         [self setSelectedIndicator:temp];
-        [temp release];
     }
     if(!self.images){
         [self showHUDWithTitle:@"loading photos" andOpacity:.5];
@@ -263,10 +256,6 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
--(void)dealloc{
-    [selected release];
-    [super dealloc];
-}
 
 #pragma mark UITableViewDataSource Delegate Methods
 
@@ -292,7 +281,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
 		
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     for(UIView *v in cell.contentView.subviews){
         [v removeFromSuperview];
@@ -318,11 +307,10 @@
     
     for (int i=0; i<x; i++) {
         GCAsset *asset = [[self filteredImages] objectAtIndex:index+i];
-        UIImageView *image = [[[UIImageView alloc] initWithFrame:rect] autorelease];
+        UIImageView *image = [[UIImageView alloc] initWithFrame:rect];
         [image setTag:index+i];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(objectTappedWithGesture:)];
         [image addGestureRecognizer:tap];
-        [tap release];
         [image setUserInteractionEnabled:YES];
         [image setImage:[asset thumbnail]];
         if([selected containsObject:asset]){
@@ -330,12 +318,11 @@
             [v setBackgroundColor:[UIColor whiteColor]];
             [v setFrame:CGRectMake(image.frame.size.width-20, image.frame.size.height-20, 20, 20)];
             [image addSubview:v];
-            [v release];
         }
         [view addSubview:image];
         rect = CGRectMake((rect.origin.x+79), rect.origin.y, rect.size.width, rect.size.height);
     }
-    return [view autorelease];
+    return view;
 }
 
 @end

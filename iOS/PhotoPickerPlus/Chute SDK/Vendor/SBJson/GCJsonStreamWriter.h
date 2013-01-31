@@ -92,7 +92,7 @@
     BOOL sortKeys, humanReadable;
 }
 
-@property (nonatomic, assign) __weak GCJsonStreamWriterState *state; // Internal
+@property (nonatomic, assign) __unsafe_unretained GCJsonStreamWriterState *state; // Internal
 @property (nonatomic, readonly, retain) NSMutableArray *stateStack; // Internal 
 
 /**

@@ -15,25 +15,21 @@
 #pragma mark - Accessor Methods
 - (NSString *)name
 {
-    return [[[self objectForKey:@"name"] retain] autorelease]; 
+    return [self objectForKey:@"name"]; 
 }
 - (void)setName:(NSString *)aName
 {
-    [aName retain];
     [self setObject:aName forKey:@"name"];
-    [aName release];
 }
 
 - (NSString *)avatarURL
 {
-    return [[[self objectForKey:@"avatar"] retain] autorelease]; 
+    return [self objectForKey:@"avatar"]; 
 }
 
 - (void)setAvatarURL:(NSString *)anAvatarURL
 {
-    [anAvatarURL retain];
     [self setObject:anAvatarURL forKey:@"avatar"];
-    [anAvatarURL release];
 }
 
 

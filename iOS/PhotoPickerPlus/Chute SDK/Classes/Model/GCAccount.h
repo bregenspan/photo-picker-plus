@@ -32,13 +32,13 @@ typedef enum {
 }
 
 @property (nonatomic) GCAccountStatus accountStatus;
-@property (nonatomic, retain) NSString *accessToken;
-@property (nonatomic, retain) NSMutableArray *assetsArray;
-@property (nonatomic, retain) NSMutableArray *heartedAssets;
+@property (nonatomic, strong) NSString *accessToken;
+@property (nonatomic, strong) NSMutableArray *assetsArray;
+@property (nonatomic, strong) NSMutableArray *heartedAssets;
 
-@property (nonatomic, retain) NSMutableArray *accounts;
+@property (nonatomic, strong) NSMutableArray *accounts;
 
-@property (nonatomic, retain) ALAssetsLibrary *assetsLibrary;
+@property (nonatomic, strong) ALAssetsLibrary *assetsLibrary;
 
 + (GCAccount *)sharedManager;
 

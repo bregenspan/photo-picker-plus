@@ -25,7 +25,7 @@
 + (GCResponse *)all {
     NSString *_path         = [[NSString alloc] initWithFormat:@"%@me/%@", API_URL, [self elementName]];
     GCRequest *gcRequest    = [[GCRequest alloc] init];
-    GCResponse *_response   = [[gcRequest getRequestWithPath:_path] retain];
+    GCResponse *_response   = [gcRequest getRequestWithPath:_path];
     
     NSMutableArray *_result = [[NSMutableArray alloc] init];
     for (NSDictionary *_dic in [_response object]) {
@@ -33,10 +33,7 @@
         [_result addObject:_obj];
     }
     [_response setObject:_result];
-    [_result release];
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease]; 
+    return _response; 
 }
 
 + (void)allInBackgroundWithCompletion:(GCResponseBlock) aResponseBlock {      
@@ -47,12 +44,10 @@
     NSString *_path     = [[NSString alloc] initWithFormat:@"%@%@/%@", API_URL, [self elementName], objectID];
     GCRequest *gcRequest      = [[GCRequest alloc] init];
 
-    GCResponse *_response        = [[gcRequest getRequestWithPath:_path] retain];
+    GCResponse *_response        = [gcRequest getRequestWithPath:_path];
     [_response setObject:[self objectWithDictionary:[_response object]]];
     
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease];
+    return _response;
 }
 
 + (void)findById:(NSString *) objectID inBackgroundWithCompletion:(GCResponseBlock) aResponseBlock {
@@ -90,7 +85,7 @@
 }
 
 + (id) objectWithDictionary:(NSDictionary *) dictionary {
-    return [[[self alloc] initWithDictionary:dictionary] autorelease];
+    return [[self alloc] initWithDictionary:dictionary];
 }
 
 - (id) initWithDictionary:(NSDictionary *) dictionary {
@@ -110,10 +105,6 @@
     return self;
 }
 
-- (void) dealloc {
-    [_content release];
-    [super dealloc];
-}
 
 - (void)setObject:(id) aObject forKey:(id)aKey {
     [_content setObject:aObject forKey:aKey];
@@ -133,7 +124,7 @@
 + (GCResponse *) searchMetaDataForKey:(NSString *) key andValue:(NSString *) value {
     NSString *_path             = [[NSString alloc] initWithFormat:@"%@%@/meta/%@/%@", API_URL, [[self class] elementName], IS_NULL(key)?@"":key, IS_NULL(value)?@"":value];
     GCRequest *gcRequest        = [[GCRequest alloc] init];
-    GCResponse *_response       = [[gcRequest getRequestWithPath:_path] retain];
+    GCResponse *_response       = [gcRequest getRequestWithPath:_path];
     
     NSMutableArray *_result     = [[NSMutableArray alloc] init];
     for (NSDictionary *_dic in [[_response object] objectForKey:[self elementName]]) {
@@ -141,10 +132,7 @@
         [_result addObject:_obj];
     }
     [_response setObject:_result];
-    [_result release];
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease];
+    return _response;
 }
 
 + (void) searchMetaDataForKey:(NSString *) key andValue:(NSString *) value inBackgroundWithCompletion:(GCResponseBlock) aResponseBlock {
@@ -154,10 +142,8 @@
 - (GCResponse *) getMetaData {
     NSString *_path              = [[NSString alloc] initWithFormat:@"%@%@/%@/meta", API_URL, [[self class] elementName], [self objectID]];
     GCRequest *gcRequest         = [[GCRequest alloc] init];
-    GCResponse *_response        = [[gcRequest getRequestWithPath:_path] retain];
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease];
+    GCResponse *_response        = [gcRequest getRequestWithPath:_path];
+    return _response;
 }
 
 - (void) getMetaDataInBackgroundWithCompletion:(GCResponseBlock) aResponseBlock {
@@ -171,10 +157,8 @@
     NSString *_path     = [[NSString alloc] initWithFormat:@"%@%@/%@/meta/%@", API_URL, [[self class] elementName], [self objectID], key];
     
     GCRequest *gcRequest          = [[GCRequest alloc] init];
-    GCResponse *_response         = [[gcRequest getRequestWithPath:_path] retain];
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease];
+    GCResponse *_response         = [gcRequest getRequestWithPath:_path];
+    return _response;
 }
 
 - (void) getMetaDataForKey:(NSString *) key inBackgroundWithCompletion:(GCResponseBlock) aResponseBlock {
@@ -192,9 +176,6 @@
     
     GCRequest *gcRequest        = [[GCRequest alloc] init];
     BOOL _response              = [[gcRequest postRequestWithPath:_path andParams:_params] isSuccessful];
-    [gcRequest release];
-    [_path release];
-    [_params release];
     return _response;
 }
 
@@ -213,9 +194,6 @@
     
     GCRequest *gcRequest        = [[GCRequest alloc] init];
     BOOL _response              = [[gcRequest postRequestWithPath:_path andParams:_params] isSuccessful];
-    [gcRequest release];
-    [_path release];
-    [_params release];
     return _response;
 }
 
@@ -231,8 +209,6 @@
     
     GCRequest *gcRequest        = [[GCRequest alloc] init];
     BOOL _response              = [[gcRequest deleteRequestWithPath:_path andParams:nil] isSuccessful];
-    [gcRequest release];
-    [_path release];
     return _response;
 }
 
@@ -248,8 +224,6 @@
     
     GCRequest *gcRequest        = [[GCRequest alloc] init];
     BOOL _response              = [[gcRequest deleteRequestWithPath:_path andParams:nil] isSuccessful];
-    [gcRequest release];
-    [_path release];
     return _response;
 }
 
@@ -279,7 +253,6 @@
     NSDateFormatter *_formatter = [[NSDateFormatter alloc] init];
     [_formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
     NSDate *_date = [_formatter dateFromString:[self objectForKey:@"updated_at"]];
-    [_formatter release];
     return _date;
 }
 
@@ -290,7 +263,6 @@
     NSDateFormatter *_formatter = [[NSDateFormatter alloc] init];
     [_formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
     NSDate *_date = [_formatter dateFromString:[self objectForKey:@"created_at"]];
-    [_formatter release];
     return _date;
 }
 
@@ -301,12 +273,11 @@
     NSMutableDictionary *_params = [[NSMutableDictionary alloc] init];
     [_params setValue:[_data dataUsingEncoding:NSUTF8StringEncoding] forKey:@"raw"];
     
-    [_data release];
     
     NSString *_path             = [[NSString alloc] initWithFormat:@"%@%@", API_URL, [[self class] elementName]];
     
     GCRequest *gcRequest        = [[GCRequest alloc] init];
-    GCResponse *_response       = [[gcRequest postRequestWithPath:_path andParams:_params] retain];
+    GCResponse *_response       = [gcRequest postRequestWithPath:_path andParams:_params];
     
     if ([_response isSuccessful]) {
         //Update the current object with the new values
@@ -315,11 +286,8 @@
         }
     }
 
-    [gcRequest release];
-    [_path release];
-    [_params release];
     
-    return [_response autorelease];
+    return _response;
 }
 
 - (void) saveInBackgroundWithCompletion:(GCBoolErrorBlock) aBoolErrorBlock {
@@ -335,12 +303,11 @@
     NSMutableDictionary *_params = [[NSMutableDictionary alloc] init];
     [_params setValue:[_data dataUsingEncoding:NSUTF8StringEncoding] forKey:@"raw"];
     
-    [_data release];
     
     NSString *_path             = [[NSString alloc] initWithFormat:@"%@%@/%@", API_URL, [[self class] elementName], [self objectID]];
     
     GCRequest *gcRequest        = [[GCRequest alloc] init];
-    GCResponse *_response       = [[gcRequest putRequestWithPath:_path andParams:_params] retain];
+    GCResponse *_response       = [gcRequest putRequestWithPath:_path andParams:_params];
     
     if ([_response isSuccessful]) {
         //Update the current object with the new values
@@ -349,11 +316,8 @@
         }
     }
 
-    [gcRequest release];
-    [_path release];
-    [_params release];
     
-    return [_response autorelease];
+    return _response;
 }
 
 - (void) updateInBackgroundWithCompletion:(GCBoolErrorBlock) aBoolErrorBlock {
@@ -367,16 +331,14 @@
     NSString *_path        = [[NSString alloc] initWithFormat:@"%@%@/%@", API_URL, [[self class] elementName], [self objectID]];
     
     GCRequest *gcRequest   = [[GCRequest alloc] init];
-    GCResponse *_response   = [[gcRequest deleteRequestWithPath:_path andParams:nil] retain];
+    GCResponse *_response   = [gcRequest deleteRequestWithPath:_path andParams:nil];
     
     if ([_response isSuccessful]) {
-        [_content release], _content = nil;
+        _content = nil;
         _content = [[NSMutableDictionary alloc] init];
     }
     
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease];
+    return _response;
 }
 
 - (void) destroyInBackgroundWithCompletion:(GCBoolErrorBlock) aBoolErrorBlock {

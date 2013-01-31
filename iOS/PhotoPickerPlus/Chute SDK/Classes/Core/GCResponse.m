@@ -63,7 +63,6 @@
             NSMutableDictionary *_errorDetail = [[NSMutableDictionary alloc] init];
             [_errorDetail setValue:[[[request responseString] JSONValue] objectForKey:@"error"] forKey:NSLocalizedDescriptionKey];
             [self setError:[GCError errorWithDomain:@"GCError" code:[request responseStatusCode] userInfo:_errorDetail]];
-            [_errorDetail release];
         }
         
         [self setRawResponse:[request responseString]];
@@ -78,13 +77,5 @@
     return [NSString stringWithFormat:@"%@\n Error: %@\n Status Code: %d \n Data: %@", [super description], [error localizedDescription], statusCode, data];
 }
 
-- (void) dealloc {
-    [data release];
-    [rawResponse release];
-    [object release];
-    [error release];
-    [requestURL release];
-    [super dealloc];
-}
 
 @end

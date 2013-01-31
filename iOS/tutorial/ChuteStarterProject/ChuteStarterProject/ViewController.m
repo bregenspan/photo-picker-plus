@@ -16,7 +16,6 @@
     [temp setDelegate:self];
     [temp setModalPresentationStyle:UIModalPresentationCurrentContext];
     [self presentViewController:temp animated:YES completion:^(void){
-        [temp release];
     }];
 }
 

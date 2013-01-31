@@ -23,8 +23,8 @@ typedef enum {
 @property (nonatomic, assign) GCPermissionType moderateMembers;
 @property (nonatomic, assign) GCPermissionType moderatePhotos;
 
-@property (nonatomic, assign) NSString *name;
-@property (nonatomic, assign) NSString *password;
+@property (nonatomic, weak) NSString *name;
+@property (nonatomic, weak) NSString *password;
 
 @property (nonatomic, assign) GCPermissionType permissionAddComments;
 @property (nonatomic, assign) GCPermissionType permissionAddMembers;
@@ -34,11 +34,11 @@ typedef enum {
 @property (nonatomic, readonly) NSUInteger recentCount;
 @property (nonatomic, readonly) NSUInteger recentParcelId;
 
-@property (nonatomic, readonly) NSString *recentThumbnailUrl;
+@property (weak, nonatomic, readonly) NSString *recentThumbnailUrl;
 
 @property (nonatomic, readonly) NSUInteger recentUserId;
 
-@property (nonatomic, readonly) NSString *shortcut;
+@property (weak, nonatomic, readonly) NSString *shortcut;
 
 - (GCResponse *) assets;
 - (void) assetsInBackgroundWithCompletion:(GCResponseBlock) aResponseBlock;

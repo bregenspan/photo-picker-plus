@@ -44,24 +44,20 @@
 - (GCResponse *) assets {
     NSString *_path         = [[NSString alloc] initWithFormat:@"%@%@/%@/assets", API_URL, [[self class] elementName], [self objectID]];
     GCRequest *gcRequest    = [[GCRequest alloc] init];
-    GCResponse *_response   = [[gcRequest getRequestWithPath:_path] retain];
+    GCResponse *_response   = [gcRequest getRequestWithPath:_path];
     
     if([_response isSuccessful]){
         NSMutableArray *_assetsArray = [[NSMutableArray alloc] init];
         for (NSDictionary *_dic in [_response data]) {
-            GCAsset *_asset = [[GCAsset objectWithDictionary:_dic] retain];
+            GCAsset *_asset = [GCAsset objectWithDictionary:_dic];
             [_asset setParentID:[self objectID]];
             [_assetsArray addObject:_asset];
-            [_asset release];
         }
         
         [_response setObject:_assetsArray];
-        [_assetsArray release];
     }
     
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease];
+    return _response;
 }
 
 - (void) assetsInBackgroundWithCompletion:(GCResponseBlock) aResponseBlock {
@@ -71,7 +67,7 @@
 - (GCResponse *) contributors {
     NSString *_path         = [[NSString alloc] initWithFormat:@"%@%@/%@/contributors", API_URL, [[self class] elementName], [self objectID]];
     GCRequest *gcRequest    = [[GCRequest alloc] init];
-    GCResponse *_response   = [[gcRequest getRequestWithPath:_path] retain];
+    GCResponse *_response   = [gcRequest getRequestWithPath:_path];
     
     NSMutableArray *_contributorsArray = [[NSMutableArray alloc] init];
     for (NSDictionary *_dic in [_response data]) {
@@ -79,11 +75,8 @@
     }
     
     [_response setObject:_contributorsArray];
-    [_contributorsArray release];
     
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease];
+    return _response;
 }
 
 - (void) contributorsInBackgroundWithCompletion:(GCResponseBlock) aResponseBlock {
@@ -93,7 +86,7 @@
 - (GCResponse *) members {
     NSString *_path         = [[NSString alloc] initWithFormat:@"%@%@/%@/members", API_URL, [[self class] elementName], [self objectID]];
     GCRequest *gcRequest    = [[GCRequest alloc] init];
-    GCResponse *_response   = [[gcRequest getRequestWithPath:_path] retain];
+    GCResponse *_response   = [gcRequest getRequestWithPath:_path];
     
     NSMutableArray *_membersArray = [[NSMutableArray alloc] init];
     for (NSDictionary *_dic in [_response data]) {
@@ -101,11 +94,8 @@
     }
     
     [_response setObject:_membersArray];
-    [_membersArray release];
     
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease];
+    return _response;
 }
 
 - (void) membersInBackgroundWithCompletion:(GCResponseBlock) aResponseBlock {
@@ -129,8 +119,6 @@
     GCRequest *gcRequest        = [[GCRequest alloc] init];
     GCResponse *response        = [gcRequest getRequestWithPath:_path];
     BOOL _response              = [response isSuccessful];
-    [gcRequest release];
-    [_path release];
     return _response;
 }
 
@@ -148,8 +136,6 @@
     GCRequest *gcRequest        = [[GCRequest alloc] init];
     GCResponse *response        = [gcRequest postRequestWithPath:_path andParams:NULL];
     BOOL _response              = [response isSuccessful];
-    [gcRequest release];
-    [_path release];
     return _response;
 }
 
@@ -169,8 +155,6 @@
     GCRequest *gcRequest        = [[GCRequest alloc] init];
     GCResponse *response        = [gcRequest postRequestWithPath:_path andParams:_params];
     BOOL _response              = [response isSuccessful];
-    [gcRequest release];
-    [_path release];
     return _response;
 }
 - (void) setEventID:(NSString*)eventID forEventType:(NSString*)eventType inBackgroundWithBOOLCompletion:(GCBoolBlock) aBoolBlock{
@@ -223,29 +207,25 @@
 
 - (NSString *)name
 {
-    return [[[self objectForKey:@"name"] retain] autorelease]; 
+    return [self objectForKey:@"name"]; 
 }
 - (void)setName:(NSString *)aName
 {
-    [aName retain];
     [self setObject:aName forKey:@"name"];
-    [aName release];
 }
 
 - (NSString *)password
 {
-    return [[[self objectForKey:@"password"] retain] autorelease]; 
+    return [self objectForKey:@"password"]; 
 }
 - (void)setPassword:(NSString *)aPassword
 {
-    [aPassword retain];
     if ([[aPassword stringByReplacingOccurrencesOfString:@" " withString:@""] length] > 0) {
         [self setObject:aPassword forKey:@"password"];
     }
     else {
         [self setObject:nil forKey:@"password"];
     }
-    [aPassword release];
 }
 
 - (GCPermissionType)permissionAddComments
@@ -296,7 +276,7 @@
 
 - (NSString *)recentThumbnailUrl
 {
-    return [[[self objectForKey:@"recent_thumbnail"] retain] autorelease];
+    return [self objectForKey:@"recent_thumbnail"];
 }
 
 - (NSUInteger)recentUserId
@@ -306,13 +286,13 @@
 
 - (NSString *)shortcut
 {
-    return [[[self objectForKey:@"shortcut"] retain] autorelease];
+    return [self objectForKey:@"shortcut"];
 }
 
 
 #pragma mark - JSON Representation Method
 - (id)proxyForJson {
-    NSMutableDictionary *_temp = [[[NSMutableDictionary alloc] init] autorelease];
+    NSMutableDictionary *_temp = [[NSMutableDictionary alloc] init];
     for (NSString *key in [[self content] allKeys]) {
         if ([key isEqualToString:@"user"]){
             if([[[self content] objectForKey:@"user"] isKindOfClass:[GCUser class]])
@@ -360,7 +340,7 @@
 + (GCResponse *)allPublic {
     NSString *_path         = [[NSString alloc] initWithFormat:@"%@public/%@", API_URL, [self elementName]];
     GCRequest *gcRequest    = [[GCRequest alloc] init];
-    GCResponse *_response   = [[gcRequest getRequestWithPath:_path] retain];
+    GCResponse *_response   = [gcRequest getRequestWithPath:_path];
     
     NSMutableArray *_result = [[NSMutableArray alloc] init];
     for (NSDictionary *_dic in [_response object]) {
@@ -368,10 +348,7 @@
         [_result addObject:_obj];
     }
     [_response setObject:_result];
-    [_result release];
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease];
+    return _response;
 }
 
 + (void)allPublicInBackgroundWithCompletion:(GCResponseBlock) aResponseBlock {      
@@ -382,7 +359,7 @@
 + (GCResponse *)allFriends {
     NSString *_path         = [[NSString alloc] initWithFormat:@"%@friends/%@", API_URL, [self elementName]];
     GCRequest *gcRequest    = [[GCRequest alloc] init];
-    GCResponse *_response   = [[gcRequest getRequestWithPath:_path] retain];
+    GCResponse *_response   = [gcRequest getRequestWithPath:_path];
     
     NSMutableArray *_result = [[NSMutableArray alloc] init];
     for (NSDictionary *_dic in [_response object]) {
@@ -390,10 +367,7 @@
         [_result addObject:_obj];
     }
     [_response setObject:_result];
-    [_result release];
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease];
+    return _response;
 }
 
 + (void)allFriendsInBackgroundWithCompletion:(GCResponseBlock) aResponseBlock {      
@@ -403,11 +377,10 @@
 - (GCResponse *) save {
     if ([self permissionView] == GCPermissionTypePassword) {
         if (IS_NULL([self password])) {
-            GCResponse *response = [[[GCResponse alloc] init] autorelease];
+            GCResponse *response = [[GCResponse alloc] init];
             NSMutableDictionary *_errorDetail = [[NSMutableDictionary alloc] init];
             [_errorDetail setValue:@"Permission Type is set to Password but password is missing." forKey:NSLocalizedDescriptionKey];
             [response setError:[GCError errorWithDomain:@"GCError" code:000 userInfo:_errorDetail]];
-            [_errorDetail release];
             return response;
         }
     }

@@ -36,7 +36,7 @@ static GCAccount *sharedAccountManager = nil;
     NSString *_path = [[NSString alloc] initWithFormat:@"%@accounts", API_URL];
     GCRequest *gcRequest = [[GCRequest alloc] init];
     
-    GCResponse *response = [[gcRequest getRequestWithPath:_path] retain];
+    GCResponse *response = [gcRequest getRequestWithPath:_path];
     
     if ([response isSuccessful]) {
         
@@ -61,16 +61,11 @@ static GCAccount *sharedAccountManager = nil;
                 [_obj setObject:[NSString stringWithFormat:@"%@",[_dic objectForKey:@"status"]] forKey:@"status"];
             
             [_data addObject:_obj];
-            [_obj release];
         }
         
         [self setAccounts:_data];
-        [_data release];
     }
     
-    [response release];
-    [gcRequest release];
-    [_path release];
 }
 
 // Public: Same as loadAccounts but runs in background and executes a completion block after
@@ -96,17 +91,17 @@ static GCAccount *sharedAccountManager = nil;
         NSMutableDictionary *_errorDetail = [NSMutableDictionary dictionary];
         [_errorDetail setValue:@"No account ID entered" forKey:NSLocalizedDescriptionKey];
         [response setError:[GCError errorWithDomain:@"GCError" code:401 userInfo:_errorDetail]];
-        return [response autorelease];
+        return response;
     }
     NSString *_path = [NSString stringWithFormat:@"%@accounts/%@/objects", API_URL,accountID];
     GCRequest *gcRequest = [[GCRequest alloc] init];
     
-    GCResponse *response = [[gcRequest getRequestWithPath:_path] retain];
+    GCResponse *response = [gcRequest getRequestWithPath:_path];
     
     if ([response isSuccessful]) {
         [response setObject:[response data]];
     }
-    return [response autorelease];
+    return response;
 }
 
 -(void)albumsForAccount:(NSString *)accountID inBackgroundWithResponse:(GCResponseBlock)aResponseBlock{
@@ -119,25 +114,25 @@ static GCAccount *sharedAccountManager = nil;
         NSMutableDictionary *_errorDetail = [NSMutableDictionary dictionary];
         [_errorDetail setValue:@"No account ID entered" forKey:NSLocalizedDescriptionKey];
         [response setError:[GCError errorWithDomain:@"GCError" code:401 userInfo:_errorDetail]];
-        return [response autorelease];
+        return response;
     }
     if(!albumID){
         GCResponse *response = [[GCResponse alloc] init];
         NSMutableDictionary *_errorDetail = [NSMutableDictionary dictionary];
         [_errorDetail setValue:@"No album ID entered" forKey:NSLocalizedDescriptionKey];
         [response setError:[GCError errorWithDomain:@"GCError" code:401 userInfo:_errorDetail]];
-        return [response autorelease];
+        return response;
     }
 
     NSString *_path = [NSString stringWithFormat:@"%@accounts/%@/objects/%@", API_URL,accountID,albumID];
     GCRequest *gcRequest = [[GCRequest alloc] init];
     
-    GCResponse *response = [[gcRequest getRequestWithPath:_path] retain];
+    GCResponse *response = [gcRequest getRequestWithPath:_path];
     
     if ([response isSuccessful]) {
         [response setObject:[response data]];
     }
-    return [response autorelease];
+    return response;
 }
 
 -(void)photosForAccount:(NSString *)accountID andAlbum:(NSString *)albumID inBackgroundWithResponse:(GCResponseBlock)aResponseBlock{
@@ -159,7 +154,7 @@ static GCAccount *sharedAccountManager = nil;
 
 - (void)loadAssetsCompletionBlock:(void (^)(void))aCompletionBlock andFailure:(void (^)(void))aFailureBlock{
         if (assetsArray) {
-            [assetsArray release], assetsArray = nil;
+            assetsArray = nil;
         }
         
         assetsArray = [[NSMutableArray alloc] init];
@@ -171,7 +166,6 @@ static GCAccount *sharedAccountManager = nil;
                 GCAsset *_asset = [[GCAsset alloc] init];
                 [_asset setAlAsset:result];
                 [assetsArray insertObject:_asset atIndex:0];
-                [_asset release];
             }
         };
         
@@ -198,7 +192,6 @@ static GCAccount *sharedAccountManager = nil;
         if(!self.assetsLibrary){
             ALAssetsLibrary *temp = [[ALAssetsLibrary alloc] init];
             [self setAssetsLibrary:temp];
-            [temp release];
         }
         
         [self.assetsLibrary enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos usingBlock:assetGroupEnumerator failureBlock:assetFailureBlock];
@@ -221,7 +214,7 @@ static GCAccount *sharedAccountManager = nil;
 // No return value.
 - (void) setAccounts:(NSMutableArray *)aAccounts {
     if (_accounts) {
-        [_accounts release], _accounts = nil;
+        _accounts = nil;
     }
     if(!aAccounts){
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -229,7 +222,7 @@ static GCAccount *sharedAccountManager = nil;
         [prefs synchronize];
         return;
     }
-    _accounts = [aAccounts retain];
+    _accounts = aAccounts;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:_accounts forKey:@"accounts"];
     [prefs synchronize];
@@ -242,7 +235,7 @@ static GCAccount *sharedAccountManager = nil;
 - (NSMutableArray *) accounts {
     if (_accounts == nil) {
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        _accounts = [[prefs objectForKey:@"accounts"] retain];
+        _accounts = [prefs objectForKey:@"accounts"];
     }
     return _accounts;
 }
@@ -256,9 +249,9 @@ static GCAccount *sharedAccountManager = nil;
 // No return value.
 - (void) setAccessToken:(NSString *)accessTkn {
     if (_accessToken) {
-        [_accessToken release], _accessToken = nil;
+        _accessToken = nil;
     }
-    _accessToken = [accessTkn retain];
+    _accessToken = accessTkn;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:_accessToken forKey:@"access_token"];
     [prefs synchronize];
@@ -270,7 +263,7 @@ static GCAccount *sharedAccountManager = nil;
 - (NSString *) accessToken {
     if (_accessToken == nil) {
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        _accessToken = [[prefs objectForKey:@"access_token"] retain];
+        _accessToken = [prefs objectForKey:@"access_token"];
     }
     return _accessToken;
 }
@@ -334,8 +327,6 @@ static GCAccount *sharedAccountManager = nil;
                                   }];
     
     
-    [gcRequest release];
-    [_path release];
 }
 
 // Public: Uses the Access code recieved during login to retrieve an access token.
@@ -373,7 +364,7 @@ static GCAccount *sharedAccountManager = nil;
         [params setValue:accessCode forKey:@"code"];
     }
     
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:kOAuthTokenURL]];
+    __unsafe_unretained ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:kOAuthTokenURL]];
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:@"Content-Type" value:@"application/x-www-form-urlencoded"];
     [request appendPostData:[[params stringWithFormEncodedComponents] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -439,8 +430,6 @@ static GCAccount *sharedAccountManager = nil;
         }
     }];
     
-    [gcRequest release];
-    [_path release];
 }
 
 // Public: logs out the user.  Clears the access token and user id.
@@ -454,7 +443,7 @@ static GCAccount *sharedAccountManager = nil;
     [prefs synchronize];
     [ASIHTTPRequest setSessionCookies:nil];
     if (_accessToken) {
-        [_accessToken release], _accessToken = nil;
+        _accessToken = nil;
     }
     [self setAccounts:NULL];
 }
@@ -468,10 +457,8 @@ static GCAccount *sharedAccountManager = nil;
 - (GCResponse *) getMyMetaData {
     NSString *_path              = [[NSString alloc] initWithFormat:@"%@me/meta", API_URL];
     GCRequest *gcRequest         = [[GCRequest alloc] init];
-    GCResponse *_response        = [[gcRequest getRequestWithPath:_path] retain];
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease];
+    GCResponse *_response        = [gcRequest getRequestWithPath:_path];
+    return _response;
 }
 
 // Public: Same as getMyMetadata except it makes the request on a background thread
@@ -498,9 +485,6 @@ static GCAccount *sharedAccountManager = nil;
     
     GCRequest *gcRequest        = [[GCRequest alloc] init];
     BOOL _response              = [[gcRequest postRequestWithPath:_path andParams:_params] isSuccessful];
-    [gcRequest release];
-    [_path release];
-    [_params release];
     return _response;
 }
 
@@ -524,16 +508,13 @@ static GCAccount *sharedAccountManager = nil;
 - (GCResponse *) getInboxParcels {
     NSString *_path              = [[NSString alloc] initWithFormat:@"%@inbox/parcels", API_URL];
     GCRequest *gcRequest         = [[GCRequest alloc] init];
-    GCResponse *_response        = [[gcRequest getRequestWithPath:_path] retain];
+    GCResponse *_response        = [gcRequest getRequestWithPath:_path];
     NSMutableArray *_parcels = [[NSMutableArray alloc] init];
     for (NSDictionary *_dic in [_response data]) {
         [_parcels addObject:[GCParcel objectWithDictionary:_dic]];
     }
     [_response setObject:_parcels];
-    [_parcels release];
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease];
+    return _response;
 }
 
 // Public: Same as getInboxParcels except it runs in the background and executes a block of code on completion
@@ -550,7 +531,7 @@ static GCAccount *sharedAccountManager = nil;
 // No return value
 - (void) loadHeartedAssets {
     if (heartedAssets) {
-        [heartedAssets release], heartedAssets = nil;
+        heartedAssets = nil;
         
     }
     
@@ -588,30 +569,10 @@ static GCAccount *sharedAccountManager = nil;
 
 + (id)allocWithZone:(NSZone *)zone
 {
-    return [[self sharedManager] retain];
+    return [self sharedManager];
 }
 
 - (id)copyWithZone:(NSZone *)zone
-{
-    return self;
-}
-
-- (id)retain
-{
-    return self;
-}
-
-- (NSUInteger)retainCount
-{
-    return NSUIntegerMax;
-}
-
-- (oneway void)release;
-{
-    //nothing
-}
-
-- (id)autorelease
 {
     return self;
 }

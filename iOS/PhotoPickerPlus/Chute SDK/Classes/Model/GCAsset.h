@@ -27,13 +27,13 @@ typedef enum {
 
 @interface GCAsset : GCResource
 
-@property (nonatomic, retain) ALAsset *alAsset;
-@property (nonatomic, retain) UIImage *thumbnail;
+@property (nonatomic, strong) ALAsset *alAsset;
+@property (nonatomic, strong) UIImage *thumbnail;
 @property (nonatomic, assign) BOOL selected;
 @property (nonatomic, assign) CGFloat progress;
 @property (nonatomic, assign) GCAssetStatus status;
 
-@property (nonatomic, retain) NSString *parentID;
+@property (nonatomic, strong) NSString *parentID;
 
 - (NSDictionary *) uniqueRepresentation;
 - (NSString *) uniqueURL;

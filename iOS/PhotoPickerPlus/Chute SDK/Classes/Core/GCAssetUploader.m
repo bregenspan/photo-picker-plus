@@ -25,16 +25,13 @@ static GCAssetUploader *sharedAssetUploader = nil;
                                    [chutes JSONRepresentation], @"chutes", 
                                    nil];
     
-    [_assetsUniqueDescription release];
     
     NSString *_path = [[NSString alloc] initWithFormat:@"%@%@", API_URL, @"parcels"];
     
     GCRequest *gcRequest = [[GCRequest alloc] init];
-    GCResponse *response = [[gcRequest postRequestWithPath:_path andParams:(NSMutableDictionary *)params] retain];
+    GCResponse *response = [gcRequest postRequestWithPath:_path andParams:(NSMutableDictionary *)params];
     
-    [gcRequest release];
-    [_path release];
-    return [response autorelease];
+    return response;
 }
 
 #pragma mark - Step 2 - Remove already uploaded assets from the queue
@@ -87,7 +84,7 @@ static GCAssetUploader *sharedAssetUploader = nil;
 
 + (id)allocWithZone:(NSZone *)zone
 {
-    return [[self sharedUploader] retain];
+    return [self sharedUploader];
 }
 
 - (id) init {
@@ -104,29 +101,5 @@ static GCAssetUploader *sharedAssetUploader = nil;
     return self;
 }
 
-- (id)retain
-{
-    return self;
-}
-
-- (NSUInteger)retainCount
-{
-    return NSUIntegerMax;
-}
-
-- (oneway void)release;
-{
-    //nothing
-}
-
-- (id)autorelease
-{
-    return self;
-}
-
-- (void) dealloc {
-    [queue release];
-    [super dealloc];
-}
 
 @end

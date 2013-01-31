@@ -23,17 +23,10 @@
 @implementation AccountViewController
 @synthesize delegate, photoAlbums, accounts, accountsTable, accountIndex, multipleImageSelectionEnabled, useStandardDevicePicker, P3;
 
--(void) dealloc{
-    [photoAlbums release];
-    [accounts release];
-    [accountsTable release];
-    [super dealloc];
-}
 
 -(void)setAccounts:(NSArray *)_accounts{
     if(!_accounts){
         if(accounts){
-            [accounts release];
             accounts = NULL;
         }
         return;
@@ -44,10 +37,9 @@
             [temp addObject:dict];
     }
     if(accounts){
-        [accounts release];
         accounts = NULL;
     }
-    accounts = [temp retain];
+    accounts = temp;
 }
 
 - (NSString *) pathForCachedUrl:(NSString *)urlString
@@ -102,7 +94,6 @@
                     [temp setUseStandardDevicePicker:[self useStandardDevicePicker]];
                     [temp setAccount:account];
                     [self.navigationController pushViewController:temp animated:YES];
-                    [temp release];
                 }
             }
             [self hideHUD];
@@ -131,7 +122,7 @@
 {
     [super viewDidLoad];
     self.accounts = [[GCAccount sharedManager] accounts];
-    self.accountsTable = [[[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain] autorelease];
+    self.accountsTable = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     if([self.navigationController.navigationBar isTranslucent]){
         [self.accountsTable setContentInset:UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height, 0, 0, 0)];
     }
@@ -144,8 +135,7 @@
     UIBarButtonItem *rightPhotoButton;
     rightPhotoButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_BUTTON_TEXT style:UIBarButtonItemStylePlain target:self action:@selector(closeSelected)];
     [self.navigationItem setRightBarButtonItem:rightPhotoButton];
-    [rightPhotoButton release];
-    [self.navigationItem setBackBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:BACK_BUTTON_TEXT style:UIBarButtonItemStyleBordered target:nil action:nil] autorelease]];
+    [self.navigationItem setBackBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:BACK_BUTTON_TEXT style:UIBarButtonItemStyleBordered target:nil action:nil]];
 }
 
 -(void) viewWillAppear:(BOOL)animated{
@@ -176,7 +166,6 @@
         if(![[GCAccount sharedManager] assetsLibrary]){
             ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
             [[GCAccount sharedManager] setAssetsLibrary:library];
-            [library release];
         }
         [[[GCAccount sharedManager] assetsLibrary] enumerateGroupsWithTypes:ALAssetsGroupAll usingBlock:assetGroupEnumerator failureBlock:assetFailureBlock];
     }
@@ -218,7 +207,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
 		
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     [cell.textLabel setText:@" "];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void) {
@@ -304,7 +293,6 @@
 //            [picker setMediaTypes:[UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera]];
             [picker setDelegate:self];
             [self presentViewController:picker animated:YES completion:^(void){
-                [picker release];
             }];
             return;
         }
@@ -345,13 +333,11 @@
                 [temp setUseStandardDevicePicker:[self useStandardDevicePicker]];
                 [temp setAccount:account];
                 [self.navigationController pushViewController:temp animated:YES];
-                [temp release];
             }
             else{
                 AccountLoginViewController *temp = [[AccountLoginViewController alloc] init];
                 [temp setService:type];
                 [self.navigationController pushViewController:temp animated:YES];
-                [temp release];
             }
         }
         else{
@@ -388,16 +374,11 @@
 @implementation AccountLoginViewController
 @synthesize AddServiceWebView, service;
 
--(void)dealloc{
-    [AddServiceWebView release];
-    [service release];
-    [super dealloc];
-}
 
 #pragma mark WebView Delegate Methods
 
 -(void)viewDidLoad{
-    self.AddServiceWebView = [[[UIWebView alloc] initWithFrame:self.view.bounds] autorelease];
+    self.AddServiceWebView = [[UIWebView alloc] initWithFrame:self.view.bounds];
     [AddServiceWebView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     [AddServiceWebView setDelegate:self];
     [self.view addSubview:AddServiceWebView];
@@ -416,7 +397,6 @@
                                                                                    [params stringWithFormEncodedComponents]]]];
         [AddServiceWebView sizeToFit];
         [AddServiceWebView loadRequest:request];
-        [params release];
     }
 }
 -(void)viewWillAppear:(BOOL)animated{
@@ -484,11 +464,6 @@
 @implementation AlbumViewController
 @synthesize delegate, albums, albumsTable, multipleImageSelectionEnabled, useStandardDevicePicker, account, P3;
 
--(void)dealloc{
-    [albums release];
-    [albumsTable release];
-    [super dealloc];
-}
 
 -(void) closeSelected{
     if(delegate && [delegate respondsToSelector:@selector(PhotoPickerPlusControllerDidCancel:)])
@@ -506,7 +481,7 @@
 
 -(void)viewDidLoad{
     
-    self.albumsTable = [[[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain] autorelease];
+    self.albumsTable = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     if([self.navigationController.navigationBar isTranslucent]){
         [self.albumsTable setContentInset:UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height, 0, 0, 0)];
     }
@@ -541,8 +516,7 @@
     UIBarButtonItem *rightPhotoButton;
     rightPhotoButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_BUTTON_TEXT style:UIBarButtonItemStylePlain target:self action:@selector(closeSelected)];
     [self.navigationItem setRightBarButtonItem:rightPhotoButton];
-    [rightPhotoButton release];
-    [self.navigationItem setBackBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:BACK_BUTTON_TEXT style:UIBarButtonItemStyleBordered target:nil action:nil] autorelease]];
+    [self.navigationItem setBackBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:BACK_BUTTON_TEXT style:UIBarButtonItemStyleBordered target:nil action:nil]];
 }
 
 #pragma mark UITableViewDataSource Delegate Methods
@@ -568,7 +542,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
 		
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     [cell.textLabel setText:@" "];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void) {
@@ -632,14 +606,6 @@
 @implementation PhotoViewController
 @synthesize  delegate, photos, photosTable, photoCountView, photoCountLabel, selectedAssets, multipleImageSelectionEnabled, useStandardDevicePicker, account, P3, album, group;
 
--(void)dealloc{
-    [photos release];
-    [photosTable release];
-    [selectedAssets release];
-    [photoCountView release];
-    [photoCountLabel release];
-    [super dealloc];
-}
 
 - (NSString *) pathForCachedUrl:(NSString *)urlString
 {
@@ -659,7 +625,6 @@
             [v setBackgroundColor:[UIColor clearColor]];
             [v setFrame:CGRectMake(0, 0, view.frame.size.width, view.frame.size.height)];
             [view addSubview:v];
-            [v release];
             [[self selectedAssets] addObject:asset];
         }
         else{
@@ -728,38 +693,38 @@
     [self showHUD];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         for(id object in [self selectedAssets]){
-            NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-            if([object isKindOfClass:[GCAsset class]]){
-                ALAsset *asset = [object alAsset];
-                NSMutableDictionary* temp = [NSMutableDictionary dictionary];
-                [temp setObject:[[asset defaultRepresentation] UTI] forKey:UIImagePickerControllerMediaType];
-                [temp setObject:[UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage] scale:1 orientation:(UIImageOrientation)[[asset defaultRepresentation] orientation]] forKey:UIImagePickerControllerOriginalImage];
-                [temp setObject:[[asset defaultRepresentation] url] forKey:UIImagePickerControllerReferenceURL];
-                [returnArray addObject:temp];
-            }
-            else{
-                NSMutableDictionary *asset = [NSMutableDictionary dictionaryWithDictionary:object];
-                [asset setObject:account forKey:@"source"];
-                NSData *data = NULL;
-                if([[NSString stringWithFormat:@"%@",[asset objectForKey:@"url"]] caseInsensitiveCompare:@"<null>"] != NSOrderedSame)
-                    data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[asset objectForKey:@"url"]]];
-                else{
-                    data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[asset objectForKey:@"thumb"]]];
+            @autoreleasepool {
+                if([object isKindOfClass:[GCAsset class]]){
+                    ALAsset *asset = [object alAsset];
+                    NSMutableDictionary* temp = [NSMutableDictionary dictionary];
+                    [temp setObject:[[asset defaultRepresentation] UTI] forKey:UIImagePickerControllerMediaType];
+                    [temp setObject:[UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage] scale:1 orientation:(UIImageOrientation)[[asset defaultRepresentation] orientation]] forKey:UIImagePickerControllerOriginalImage];
+                    [temp setObject:[[asset defaultRepresentation] url] forKey:UIImagePickerControllerReferenceURL];
+                    [returnArray addObject:temp];
                 }
-                UIImage *image = [UIImage imageWithData:data];
-                NSMutableDictionary* temp = [NSMutableDictionary dictionary];
-                [temp setObject:@"public.image" forKey:UIImagePickerControllerMediaType];
-                if(image)
-                    [temp setObject:image forKey:UIImagePickerControllerOriginalImage];
-                if([[NSString stringWithFormat:@"%@",[asset objectForKey:@"url"]] caseInsensitiveCompare:@"<null>"] != NSOrderedSame)
-                    [temp setObject:[NSURL URLWithString:[asset objectForKey:@"url"]] forKey:UIImagePickerControllerReferenceURL];
                 else{
-                    [temp setObject:[NSURL URLWithString:[asset objectForKey:@"thumb"]] forKey:UIImagePickerControllerReferenceURL];
+                    NSMutableDictionary *asset = [NSMutableDictionary dictionaryWithDictionary:object];
+                    [asset setObject:account forKey:@"source"];
+                    NSData *data = NULL;
+                    if([[NSString stringWithFormat:@"%@",[asset objectForKey:@"url"]] caseInsensitiveCompare:@"<null>"] != NSOrderedSame)
+                        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[asset objectForKey:@"url"]]];
+                    else{
+                        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[asset objectForKey:@"thumb"]]];
+                    }
+                    UIImage *image = [UIImage imageWithData:data];
+                    NSMutableDictionary* temp = [NSMutableDictionary dictionary];
+                    [temp setObject:@"public.image" forKey:UIImagePickerControllerMediaType];
+                    if(image)
+                        [temp setObject:image forKey:UIImagePickerControllerOriginalImage];
+                    if([[NSString stringWithFormat:@"%@",[asset objectForKey:@"url"]] caseInsensitiveCompare:@"<null>"] != NSOrderedSame)
+                        [temp setObject:[NSURL URLWithString:[asset objectForKey:@"url"]] forKey:UIImagePickerControllerReferenceURL];
+                    else{
+                        [temp setObject:[NSURL URLWithString:[asset objectForKey:@"thumb"]] forKey:UIImagePickerControllerReferenceURL];
+                    }
+                    [temp setObject:asset forKey:UIImagePickerControllerMediaMetadata];
+                    [returnArray addObject:temp];
                 }
-                [temp setObject:asset forKey:UIImagePickerControllerMediaMetadata];
-                [returnArray addObject:temp];
             }
-            [pool release];
         }
         dispatch_async(dispatch_get_main_queue(), ^(void) {
             if(delegate && [delegate respondsToSelector:@selector(PhotoPickerPlusController:didFinishPickingArrayOfMediaWithInfo:)])
@@ -786,7 +751,7 @@
     
     self.selectedAssets = [NSMutableOrderedSet orderedSet];
     
-    self.photosTable = [[[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain] autorelease];
+    self.photosTable = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     if([self.navigationController.navigationBar isTranslucent]){
         [self.photosTable setContentInset:UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height, 0, 0, 0)];
     }
@@ -797,7 +762,7 @@
     [photosTable setAllowsSelection:NO];
     [self.view addSubview:photosTable];
     
-    self.photoCountView = [[[UIView alloc] initWithFrame:self.view.bounds] autorelease];
+    self.photoCountView = [[UIView alloc] initWithFrame:self.view.bounds];
     [photoCountView setAutoresizingMask:UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth];
     [photoCountView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:.4]];
     
@@ -807,7 +772,7 @@
     [closeCountButton addTarget:self action:@selector(hidePhotoCountView) forControlEvents:UIControlEventTouchDown];
     [photoCountView addSubview:closeCountButton];
     
-    self.photoCountLabel = [[[UILabel alloc] initWithFrame:self.view.bounds] autorelease];
+    self.photoCountLabel = [[UILabel alloc] initWithFrame:self.view.bounds];
     [photoCountLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth];
     [photoCountLabel setBackgroundColor:[UIColor clearColor]];
     [photoCountLabel setTextColor:[UIColor whiteColor]];
@@ -825,7 +790,6 @@
                     GCAsset *_asset = [[GCAsset alloc] init];
                     [_asset setAlAsset:result];
                     [assetsArray insertObject:_asset atIndex:0];
-                    [_asset release];
                 }
                 else{
                     [self setPhotos:assetsArray];
@@ -897,8 +861,7 @@
     else
         rightPhotoButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_BUTTON_TEXT style:UIBarButtonItemStylePlain target:self action:@selector(closeSelected)];
     [self.navigationItem setRightBarButtonItem:rightPhotoButton];
-    [rightPhotoButton release];
-    [self.navigationItem setBackBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:BACK_BUTTON_TEXT style:UIBarButtonItemStyleBordered target:nil action:nil] autorelease]];
+    [self.navigationItem setBackBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:BACK_BUTTON_TEXT style:UIBarButtonItemStyleBordered target:nil action:nil]];
 }
 
 -(void) viewDidAppear:(BOOL)animated{
@@ -929,7 +892,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     [cell.textLabel setText:@" "];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void) {
@@ -962,7 +925,7 @@
     if(tableView == photosTable){
         int initialThumbOffset = ((int)photosTable.frame.size.width+THUMB_SPACING-(THUMB_COUNT_PER_ROW*(THUMB_SIZE+THUMB_SPACING)))/2;
         if([self account]){
-            UIView *view = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, photosTable.frame.size.width, [self tableView:photosTable heightForRowAtIndexPath:indexPath])] autorelease];
+            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, photosTable.frame.size.width, [self tableView:photosTable heightForRowAtIndexPath:indexPath])];
             int index = indexPath.row * (THUMB_COUNT_PER_ROW);
             int maxIndex = index + ((THUMB_COUNT_PER_ROW)-1);
             CGRect rect = CGRectMake(initialThumbOffset, THUMB_SPACING/2, THUMB_SIZE, THUMB_SIZE);
@@ -973,11 +936,10 @@
             
             for (int i=0; i<x; i++) {
                 NSDictionary *asset = [[self photos] objectAtIndex:index+i];
-                UIImageView *image = [[[UIImageView alloc] initWithFrame:rect] autorelease];
+                UIImageView *image = [[UIImageView alloc] initWithFrame:rect];
                 [image setTag:index+i];
                 UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(objectTappedWithGesture:)];
                 [image addGestureRecognizer:tap];
-                [tap release];
                 [image setUserInteractionEnabled:YES];
                 [image setImageWithURL:[NSURL URLWithString:[asset objectForKey:@"thumb"]]];
                 [view addSubview:image];
@@ -986,14 +948,13 @@
                     [v setBackgroundColor:[UIColor clearColor]];
                     [v setFrame:CGRectMake(0, 0, image.frame.size.width, image.frame.size.height)];
                     [image addSubview:v];
-                    [v release];
                 }
                 rect = CGRectMake((rect.origin.x+THUMB_SIZE+THUMB_SPACING), rect.origin.y, rect.size.width, rect.size.height);
             }
             return view;
         }
         else{
-            UIView *view = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, photosTable.frame.size.width, [self tableView:photosTable heightForRowAtIndexPath:indexPath])] autorelease];
+            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, photosTable.frame.size.width, [self tableView:photosTable heightForRowAtIndexPath:indexPath])];
             int index = indexPath.row * (THUMB_COUNT_PER_ROW);
             int maxIndex = index + ((THUMB_COUNT_PER_ROW)-1);
             CGRect rect = CGRectMake(initialThumbOffset, THUMB_SPACING/2, THUMB_SIZE, THUMB_SIZE);
@@ -1004,11 +965,10 @@
             
             for (int i=0; i<x; i++) {
                 GCAsset *asset = [[self photos] objectAtIndex:index+i];
-                UIImageView *image = [[[UIImageView alloc] initWithFrame:rect] autorelease];
+                UIImageView *image = [[UIImageView alloc] initWithFrame:rect];
                 [image setTag:index+i];
                 UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(objectTappedWithGesture:)];
                 [image addGestureRecognizer:tap];
-                [tap release];
                 [image setUserInteractionEnabled:YES];
                 [image setImage:[asset thumbnail]];
                 [view addSubview:image];
@@ -1017,7 +977,6 @@
                     [v setBackgroundColor:[UIColor clearColor]];
                     [v setFrame:CGRectMake(0, 0, image.frame.size.width, image.frame.size.height)];
                     [image addSubview:v];
-                    [v release];
                 }
                 rect = CGRectMake((rect.origin.x+THUMB_SIZE+THUMB_SPACING), rect.origin.y, rect.size.width, rect.size.height);
             }
@@ -1049,9 +1008,6 @@
 @synthesize sourceType, presentationStyle;
 
 
--(void)dealloc{
-    [super dealloc];
-}
 
 -(IBAction)cameraSelected:(id)sender{
     if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){ 
@@ -1059,7 +1015,6 @@
         [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
         [picker setDelegate:self];
         [self presentViewController:picker animated:YES completion:^(void){
-            [picker release];
         }];
     }
     else{
@@ -1077,13 +1032,12 @@
     [temp setP3:self];
     [temp setMultipleImageSelectionEnabled:[self multipleImageSelectionEnabled]];
     [temp setUseStandardDevicePicker:[self useStandardDevicePicker]];
-    UINavigationController *navController = [[[UINavigationController alloc] initWithRootViewController:temp] autorelease];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:temp];
     [navController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
     [navController setModalPresentationStyle:[self presentationStyle]];
     [[GCAccount sharedManager] loadAccountsInBackgroundWithCompletion:^(void){
         [self presentModalViewController:navController animated:YES];
     }];
-    [temp release];
 }
 
 -(IBAction)latestSelected:(id)sender{
@@ -1191,7 +1145,6 @@
                 popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
                 popupQuery.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
                 [popupQuery showInView:self.view];
-                [popupQuery release];
             }
             else{
                 UIActionSheet *popupQuery = nil;
@@ -1202,7 +1155,6 @@
                 popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
                 popupQuery.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
                 [popupQuery showInView:self.view];
-                [popupQuery release];
             }
         }else if(sourceType == PhotoPickerPlusSourceTypeCamera){
             [self cameraSelected:nil];

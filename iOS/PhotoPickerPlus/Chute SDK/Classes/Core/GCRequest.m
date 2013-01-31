@@ -28,7 +28,7 @@
     [_request setRequestHeaders:[self headers]];
     [_request setTimeOutSeconds:300.0];
     [_request startSynchronous];
-    GCResponse *_result = [[[GCResponse alloc] initWithRequest:_request] autorelease];
+    GCResponse *_result = [[GCResponse alloc] initWithRequest:_request];
     return _result;
 }
 
@@ -62,7 +62,7 @@
     [_request startSynchronous];
     NSLog(@"POST BODY: %@",[_request postBody]);
     
-    GCResponse *_result = [[[GCResponse alloc] initWithRequest:_request] autorelease];
+    GCResponse *_result = [[GCResponse alloc] initWithRequest:_request];
     return _result;
 }
 

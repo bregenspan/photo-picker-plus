@@ -22,11 +22,11 @@ typedef enum {
 @property (nonatomic, assign) NSUInteger completedAssetCount;
 
 @property (nonatomic, assign) GCParcelStatus status;
-@property (nonatomic, retain) NSMutableArray *assets;
-@property (nonatomic, readonly) NSArray *chutes;
-@property (nonatomic, retain) NSDictionary *postMetaData;
+@property (nonatomic, strong) NSMutableArray *assets;
+@property (weak, nonatomic, readonly) NSArray *chutes;
+@property (nonatomic, strong) NSDictionary *postMetaData;
 
-@property (nonatomic, assign) id<NSObject> delegate;
+@property (nonatomic, weak) id<NSObject> delegate;
 @property (nonatomic, assign) SEL completionSelector;
 
 + (id) objectWithAssets:(NSArray *) _assets andChutes:(NSArray *) _chutes;

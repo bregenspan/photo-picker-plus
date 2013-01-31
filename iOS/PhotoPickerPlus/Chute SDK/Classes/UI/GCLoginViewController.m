@@ -25,7 +25,6 @@
     } andError:^(NSError *error) {
         GCLoginViewController *loginController = [[GCLoginViewController alloc] init];
         [controller presentModalViewController:loginController animated:YES];
-        [loginController release];
     }];
 }
 
@@ -34,7 +33,6 @@
     [loginController setView:[loginController blankBackground]];
     [controller presentModalViewController:loginController animated:NO];
     [loginController loginWithService:service];
-    [loginController release];
 }
 
 -(IBAction) login {
@@ -75,7 +73,6 @@
     [self showAuthViewCompletion:^(void) {
         [authWebView loadRequest:request];
     }];
-    [params release];
 }
 
 -(void) showAuthViewCompletion:(void (^)(void))completion {
@@ -160,13 +157,6 @@
     }
 }
 
-- (void)dealloc
-{
-    [authView release];
-    [authWebView release];
-    [blankBackground release];
-    [super dealloc];
-}
 
 - (void)didReceiveMemoryWarning
 {

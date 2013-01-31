@@ -14,11 +14,11 @@
 @interface GCResponse : NSObject
 
 @property (nonatomic, assign) NSUInteger statusCode;
-@property (nonatomic, retain) GCError *error;
-@property (nonatomic, retain) id object;
-@property (nonatomic, retain) id rawResponse;
-@property (nonatomic, retain) id data;
-@property (nonatomic, retain) NSString *requestURL;
+@property (nonatomic, strong) GCError *error;
+@property (nonatomic, strong) id object;
+@property (nonatomic, strong) id rawResponse;
+@property (nonatomic, strong) id data;
+@property (nonatomic, strong) NSString *requestURL;
 
 - (id) initWithRequest:(ASIHTTPRequest *) request;
 - (BOOL) isSuccessful;

@@ -24,15 +24,15 @@
     
     NSArray *uploadChutes;
 }
-@property (nonatomic, retain) NSArray *images;
-@property (nonatomic, retain) NSArray *filteredImages;
-@property (nonatomic, retain) IBOutlet UIImageView *selectedIndicator;
-@property (nonatomic, retain) NSArray *uploadChutes;
-@property (nonatomic, retain) NSDate *start;
-@property (nonatomic, retain) NSDate *end;
-@property (nonatomic, retain) NSMutableSet *_selected;
-@property (nonatomic, retain) IBOutlet UITableView *imageTable;
-@property (nonatomic, retain) IBOutlet UILabel *switchModeLabel;
+@property (nonatomic, strong) NSArray *images;
+@property (nonatomic, strong) NSArray *filteredImages;
+@property (nonatomic, strong) IBOutlet UIImageView *selectedIndicator;
+@property (nonatomic, strong) NSArray *uploadChutes;
+@property (nonatomic, strong) NSDate *start;
+@property (nonatomic, strong) NSDate *end;
+@property (nonatomic, strong) NSMutableSet *_selected;
+@property (nonatomic, strong) IBOutlet UITableView *imageTable;
+@property (nonatomic, strong) IBOutlet UILabel *switchModeLabel;
 
 -(NSArray*)selectedImages;
 -(IBAction)uploadAssets:(id)sender;

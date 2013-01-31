@@ -13,14 +13,16 @@
 
 @implementation GCUIBaseViewController
 
+// NOTE: may be unneeded at all with ARC
 - (void) setAlertCompletionBlock:(void (^)(void)) completionBlock {
-    alertCompletionBlock = Block_copy(completionBlock);
+    alertCompletionBlock = [completionBlock copy];
 }
 
+// NOTE: may be unneeded at all with ARC
 - (void) setAlertCancelBlock:(void (^)(void)) cancelBlock {
-    alertCancelBlock = Block_copy(cancelBlock);
+    alertCancelBlock = [cancelBlock copy];
 }
-
+    
 - (void) showHUD {
     [self showHUDWithTitle:@"Loading..." andOpacity:0.5f];
 }
@@ -50,7 +52,7 @@
     
 	[HUD hide:YES];
 	[HUD removeFromSuperview];
-	[HUD release], HUD=nil;
+	HUD=nil;
 }
 
 -(void) quickAlertWithTitle:(NSString *) title 
@@ -66,7 +68,7 @@
                     cancelBlock:(void (^)(void))cancelBlock {
     
     if (_alert) {
-        [_alert release], _alert = nil;
+        _alert = nil;
     }
     
     if (cancelBlock != nil) {
@@ -89,15 +91,17 @@
     
     [_alert show];
     
+    // NOTE: may be unneeded at all with ARC
     if (completionBlock) {
-        alertCompletionBlock = Block_copy(completionBlock);
+        alertCompletionBlock = [completionBlock copy];
     }
     
+    // NOTE: may be unneeded at all with ARC
     if (cancelBlock) {
-        alertCancelBlock = Block_copy(cancelBlock);
+        alertCancelBlock = [cancelBlock copy];
     }
     
-    [_alert release], _alert = nil;
+    _alert = nil;
 }
 
 
@@ -113,8 +117,7 @@
         default:
             break;
     }
-    Block_release(alertCompletionBlock);
-    Block_release(alertCancelBlock);
+
 }
 
 - (void) viewDidDisappear:(BOOL)animated {

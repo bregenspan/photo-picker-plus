@@ -20,7 +20,7 @@
 + (GCResponse *)all {
     NSString *_path         = [[NSString alloc] initWithFormat:@"%@inbox/%@", API_URL, [self elementName]];
     GCRequest *gcRequest    = [[GCRequest alloc] init];
-    GCResponse *_response   = [[gcRequest getRequestWithPath:_path] retain];
+    GCResponse *_response   = [gcRequest getRequestWithPath:_path];
     
     NSMutableArray *_result = [[NSMutableArray alloc] init];
     for (NSDictionary *_dic in [_response object]) {
@@ -28,10 +28,7 @@
         [_result addObject:_obj];
     }
     [_response setObject:_result];
-    [_result release];
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease]; 
+    return _response; 
 }
 
 -(GCChute*)chute{
@@ -60,8 +57,6 @@
     GCRequest *gcRequest        = [[GCRequest alloc] init];
     GCResponse *response        = [gcRequest postRequestWithPath:_path andParams:NULL];
     BOOL _response              = [response isSuccessful];
-    [gcRequest release];
-    [_path release];
     return _response;
     return NO;
 }

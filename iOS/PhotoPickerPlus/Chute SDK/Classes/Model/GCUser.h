@@ -9,7 +9,7 @@
 
 @interface GCUser : GCResource
 
-@property (nonatomic, retain) NSString *name;
-@property (nonatomic, retain) NSString *avatarURL;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *avatarURL;
 
 @end

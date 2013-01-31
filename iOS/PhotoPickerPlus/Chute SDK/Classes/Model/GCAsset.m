@@ -69,10 +69,8 @@ NSString * const GCAssetUploadComplete = @"GCAssetUploadComplete";
 - (GCResponse *) heart {
     NSString *_path              = [[NSString alloc] initWithFormat:@"%@%@/%@/heart", API_URL, [[self class] elementName], [self objectID]];
     GCRequest *gcRequest         = [[GCRequest alloc] init];
-    GCResponse *_response        = [[gcRequest postRequestWithPath:_path andParams:nil] retain];
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease];
+    GCResponse *_response        = [gcRequest postRequestWithPath:_path andParams:nil];
+    return _response;
 }
 
 // Public: Same as heart except it runs on a background thread and executes
@@ -91,10 +89,8 @@ NSString * const GCAssetUploadComplete = @"GCAssetUploadComplete";
 - (GCResponse *) unheart {
     NSString *_path              = [[NSString alloc] initWithFormat:@"%@%@/%@/unheart", API_URL, [[self class] elementName], [self objectID]];
     GCRequest *gcRequest         = [[GCRequest alloc] init];
-    GCResponse *_response        = [[gcRequest postRequestWithPath:_path andParams:nil] retain];
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease];
+    GCResponse *_response        = [gcRequest postRequestWithPath:_path andParams:nil];
+    return _response;
 }
 
 // Public: Same as unheart except it runs on a background thread and executes
@@ -117,15 +113,13 @@ NSString * const GCAssetUploadComplete = @"GCAssetUploadComplete";
         NSMutableDictionary *_errorDetail = [NSMutableDictionary dictionary];
         [_errorDetail setValue:@"No asset info to to send" forKey:NSLocalizedDescriptionKey];
         [response setError:[GCError errorWithDomain:@"GCError" code:401 userInfo:_errorDetail]];
-        return [response autorelease];
+        return response;
     }
     NSString *_path              = [[NSString alloc] initWithFormat:@"%@%@/verify", API_URL, [[self class] elementName]];
     GCRequest *gcRequest         = [[GCRequest alloc] init];
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObject:[[NSArray arrayWithObject:[self uniqueRepresentation]] JSONRepresentation] forKey:@"files"];
-    GCResponse *_response        = [[gcRequest postRequestWithPath:_path andParams:params] retain];
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease];
+    GCResponse *_response        = [gcRequest postRequestWithPath:_path andParams:params];
+    return _response;
 }
 
 #pragma mark - Comment Methods
@@ -140,16 +134,13 @@ NSString * const GCAssetUploadComplete = @"GCAssetUploadComplete";
     }
     NSString *_path              = [[NSString alloc] initWithFormat:@"%@chutes/%@/assets/%@/comments", API_URL, [self parentID], [self objectID]];
     GCRequest *gcRequest         = [[GCRequest alloc] init];
-    GCResponse *_response        = [[gcRequest getRequestWithPath:_path] retain];
+    GCResponse *_response        = [gcRequest getRequestWithPath:_path];
     NSMutableArray *_comments    = [[NSMutableArray alloc] init]; 
     for (NSDictionary *_dic in [_response data]) {
         [_comments addObject:[GCComment objectWithDictionary:_dic]];
     }
     [_response setObject:_comments];
-    [_comments release];
-    [gcRequest release];
-    [_path release];
-    return [_response autorelease];
+    return _response;
 }
 
 // Public: Same as comments except runs in background and executes a completion block after finishing the request
@@ -177,11 +168,8 @@ NSString * const GCAssetUploadComplete = @"GCAssetUploadComplete";
     NSString *_path             = [[NSString alloc] initWithFormat:@"%@chutes/%@/assets/%@/comments", API_URL, [self parentID], [self objectID]];
     
     GCRequest *gcRequest        = [[GCRequest alloc] init];
-    GCResponse *_response       = [[gcRequest postRequestWithPath:_path andParams:_params] retain];
-    [gcRequest release];
-    [_path release];
-    [_params release];
-    return [_response autorelease];
+    GCResponse *_response       = [gcRequest postRequestWithPath:_path andParams:_params];
+    return _response;
 }
 
 // Public: Same as addComment except runs in background and executes a completion block after finishing the request
@@ -366,11 +354,6 @@ inBackgroundWithCompletion:(void (^)(UIImage *))aResponseBlock {
 // Public: deallocates the asset, releasing retained objects.
 //
 // no return value
-- (void) dealloc {
-    [parentID release];
-    [alAsset release];
-    [super dealloc];
-}
 
 #pragma mark - Super Class Methods
 
